@@ -15,10 +15,10 @@ This repository contains the files and scripts for the HIT140 group assignment o
 - `.png` output files: Will be added after visualizations are generated
 
 ## 👥 Group Members (To be filled by everyone)
-- Ashish Dhakal (Initial repo setup & dataset upload and will add python code too)
-- [SHREEJAN DHAKAL] (Add your contribution)
-- [BISHAL RAUT] (Add your contribution)
-- [PRATIK THAPA MAGAR] (Add your contribution)
+- ASHISH DHAKAL (Initial repo setup & dataset upload and will add python code too)
+- SHREEJAN DHAKAL (Add your contribution)
+- BISHAL RAUT (Add your contribution)
+- PRATIK THAPA MAGAR (Add your contribution)
 
 ## 🛠️ Tasks To Do
 - [ ] Upload initial version of `bat_vs_rat_analysis.py` 

@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load datasets
-dataset1 = pd.read_csv("dataset_1.csv")
-dataset2 = pd.read_csv("Dataset2.csv")
+dataset1 = pd.read_csv("dataset1.csv")
+dataset2 = pd.read_csv("dataset2.csv")
 
 # Clean and transform data
 dataset1['risk'] = dataset1['risk'].astype(str)

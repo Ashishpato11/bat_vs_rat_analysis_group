@@ -7,8 +7,8 @@ dataset1 = pd.read_csv("dataset1.csv")
 dataset2 = pd.read_csv("dataset2.csv")
 
 # Clean and transform data
-dataset1['risk'] = dataset1['risk'].astype(str)
-dataset1['reward'] = dataset1['reward'].astype(float)
+dataset1['risk'] = dataset1['risk'].astype(int)
+dataset1['reward'] = dataset1['reward'].astype(int)
 
 # Risk analysis by season
 risk_season = dataset1.groupby('seasn')['risk'].mean().reset_index()

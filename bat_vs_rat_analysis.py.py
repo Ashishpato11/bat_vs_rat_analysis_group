@@ -11,17 +11,18 @@ dataset1['risk'] = dataset1['risk'].astype(int)
 dataset1['reward'] = dataset1['reward'].astype(int)
 
 # Risk analysis by season
-risk_season = dataset1.groupby('seasn')['risk'].mean().reset_index()
+risk_season = dataset1.groupby('season')['risk'].mean().reset_index()
 reward_season = dataset1.groupby('season')['reward'].mean().reset_index()
 
 # Correlation analysis
-correlation = dataset2[['bat_land', 'rat_minutes', 'rat_arrival_number']].corr()
+correlation = dataset2[['bat_landing_number', 'rat_minutes', 'rat_arrival_number']].corr()
 
 # Plotting average risk by season
+plt.figure(figsize=(6, 4))
 sns.barplot(x='season', y='reward', data=risk_season)
-plt.title('Risking Season')
+plt.title('Average Risk-Taking Behaviour by Season')
 plt.xlabel('Season')
-plt.ylabel('Risk')
+plt.ylabel('Average Risk')
 plt.tight_layout()
 plt.savefig("risk_by_season.png")
 plt.close()

@@ -42,7 +42,7 @@ plt.tight_layout()
 plt.savefig("correlation_matrix.png")
 plt.close()
 
-# # Plotting average risk by seasonc
+# # Plotting average risk by season
 plt.figure(figsize=(6, 4))
 sns.barplot(x='season', y='reward', data=reward_season)
 plt.title('Average Risk-Taking Behaviour by Season')
@@ -52,6 +52,17 @@ plt.tight_layout()
 plt.savefig("risk_by_season.png")
 plt.close()
 
+# proportion of reward vs risk (no rat vs rat)
+plt.figure(figsize=(6,4))
+sns.barplot(
+    data=dataset1, x="risk", y="reward", ci=None, estimator=lambda x: sum(x)/len(x)
+)
+plt.xticks([0,1], ["No Rat", "Rat Present"])
+plt.title("Proportion of Rewards vs risk")
+plt.ylabel("Proportion of Rewards")
+plt.xlabel("Risk")
+plt.ylim(0,1)
+plt.show()
 
 
 """Formulating and testing the hypothesis 

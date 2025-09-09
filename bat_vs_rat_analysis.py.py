@@ -3,21 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-#for z score analysis
+# Z-score analysis
 from scipy.stats import zscore
 
-#importing for t test
+# T-test
 from scipy import stats
 
-# Import datasets csv
+# Load datasets
 dataset1 = pd.read_csv("dataset1.csv")
 dataset2 = pd.read_csv("dataset2.csv")
 
 
-# Data Cleaning and transformation
-#selects column ris from the data frame as int converts all the values to integer
-
-#updated the data handling 
+# Data cleaning
+# Convert columns to numeric
 dataset1['risk'] = pd.to_numeric(dataset1['risk'], errors='coerce')
 dataset1['reward'] = pd.to_numeric(dataset1['reward'], errors='coerce')
 
@@ -30,14 +28,11 @@ for col in num_cols_1:
 for col in num_cols_2:
     dataset2[col] = pd.to_numeric(dataset2[col], errors='coerce')
 
-#Removing the column that has important missing values
+# Remove rows with missing values
 dataset1 = dataset1.dropna(subset=['bat_landing_to_food', 'seconds_after_rat_arrival', 'risk', 'reward'])
 dataset2 = dataset2.dropna(subset=['bat_landing_number', 'rat_minutes', 'rat_arrival_number'])
 
-"""Descriptive analysis of data sets 1
-"""
-
-"function to create the descriptive analysis"
+# Descriptive analysis for dataset1 (bat landing times)
 def descriptive_analysis(data, col_name, title_prefix):
     mean_val = data[col_name].mean()
     median_val = data[col_name].median()
@@ -48,7 +43,7 @@ def descriptive_analysis(data, col_name, title_prefix):
     Q3 = data[col_name].quantile(0.75)
     IQR = Q3 - Q1
 
-    # Histogram visulaization for the 
+    # Histogram
     plt.figure(figsize=(8,5))
     sns.histplot(data[col_name], bins=30, kde=True, color='skyblue')
     plt.axvline(mean_val, color='red', linestyle='--', label=f'Mean: {mean_val:.2f}')
@@ -85,7 +80,7 @@ descriptive_analysis(dataset1, 'bat_landing_to_food', 'Dataset1 - Bat Landing to
 for col in ['bat_landing_number', 'rat_minutes', 'rat_arrival_number']:
     descriptive_analysis(dataset2, col, f'Dataset2 - {col}')
 
-# Risk analysis by season
+# Risk and reward by season
 risk_season = dataset1.groupby('season')['risk'].mean().reset_index()
 reward_season = dataset1.groupby('season')['reward'].mean().reset_index()
 
@@ -164,7 +159,7 @@ plt.savefig("Z-score Distribution of Seconds After Rat Arrival.png")
 plt.close()
 
 
-# Additional T-test for vigilance by risk behavior
+# T-test: vigilance by risk behavior
 risk_avoidance_delays = dataset1[dataset1['risk']==0]['bat_landing_to_food'].dropna()
 risk_taking_delays = dataset1[dataset1['risk']==1]['bat_landing_to_food'].dropna()
 
@@ -176,7 +171,7 @@ if p_val_risk < 0.05:
 else:
     print("No significant difference in vigilance between risk behaviors")
 
-# Plot vigilance delays by risk behavior
+# Boxplot: vigilance delays
 plt.figure(figsize=(8, 6))
 plt.boxplot([risk_avoidance_delays, risk_taking_delays], labels=['Risk-Avoidance', 'Risk-Taking'])
 plt.title('Vigilance Delays by Risk Behavior')
@@ -187,7 +182,7 @@ plt.tight_layout()
 plt.savefig('vigilance_delays_by_risk_behavior.png', dpi=300, bbox_inches='tight')
 plt.close()
 
-# Additional T-test for bat activity (Dataset2)
+# T-test: bat activity vs rat presence 
 bat_landings_with_rats = dataset2[dataset2['rat_arrival_number']>0]['bat_landing_number'].dropna()
 bat_landings_without_rats = dataset2[dataset2['rat_arrival_number']==0]['bat_landing_number'].dropna()
 
@@ -199,7 +194,7 @@ if p_val_activity < 0.05:
 else:
     print("No significant difference in bat activity due to rats")
 
-# Plot bat activity vs rat presence 
+# Barplot: bat activity vs rat presence 
 plt.figure(figsize=(8, 6))
 conditions = ['With Rats', 'Without Rats']
 means = [bat_landings_with_rats.mean(), bat_landings_without_rats.mean()]
@@ -211,3 +206,7 @@ for bar, mean_val in zip(bars, means):
 plt.tight_layout()
 plt.savefig('bat_activity_vs_rat_presence.png', dpi=300, bbox_inches='tight')
 plt.close()
+
+# Summary:
+# This code script loads and cleans bat and rat datasets, performs descriptive and statistical analysis,
+# visualizes results, and tests hypotheses about bat behavior in relation to rat presence.

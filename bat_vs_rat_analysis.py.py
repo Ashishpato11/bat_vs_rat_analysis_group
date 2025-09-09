@@ -2,11 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 #for z score analysis
 from scipy.stats import zscore
-
-
 
 #importing for t test
 from scipy import stats
@@ -15,14 +12,9 @@ from scipy import stats
 dataset1 = pd.read_csv("dataset1.csv")
 dataset2 = pd.read_csv("dataset2.csv")
 
-
-
-
-
 #testing the import of data need to clean this after
 print(dataset1.columns)
 print(dataset2)
-
 
 # Data Cleaning and transformation
 #selects column ris from the data frame as int converts all the values to integer
@@ -30,7 +22,6 @@ print(dataset2)
 #updated the data handling 
 dataset1['risk'] = pd.to_numeric(dataset1['risk'], errors='coerce')
 dataset1['reward'] = pd.to_numeric(dataset1['reward'], errors='coerce')
-
 
 num_cols_1 = ['bat_landing_to_food', 'seconds_after_rat_arrival', 'hours_after_sunset']
 num_cols_2 = ['bat_landing_number', 'food_availability', 'rat_minutes', 'rat_arrival_number', 'hours_after_sunset']
@@ -41,17 +32,12 @@ for col in num_cols_1:
 for col in num_cols_2:
     dataset2[col] = pd.to_numeric(dataset2[col], errors='coerce')
 
-
-
-
 #Removing the column that has important missing values
 dataset1 = dataset1.dropna(subset=['bat_landing_to_food', 'seconds_after_rat_arrival', 'risk', 'reward'])
 dataset2 = dataset2.dropna(subset=['bat_landing_number', 'rat_minutes', 'rat_arrival_number'])
 
 """Descriptive analysis of data sets 1
-
 """
-
 
 "function to create the descriptive analysis"
 def descriptive_analysis(data, col_name, title_prefix):
@@ -63,8 +49,6 @@ def descriptive_analysis(data, col_name, title_prefix):
     Q1 = data[col_name].quantile(0.25)
     Q3 = data[col_name].quantile(0.75)
     IQR = Q3 - Q1
-
-    
 
     # Histogram visulaization for the 
     plt.figure(figsize=(8,5))
@@ -96,7 +80,6 @@ def descriptive_analysis(data, col_name, title_prefix):
     plt.tight_layout()
     plt.show()
 
-
 # Descriptive analysis for dataset1 (bat landing times)
 descriptive_analysis(dataset1, 'bat_landing_to_food', 'Dataset1 - Bat Landing to Food')
 
@@ -114,12 +97,13 @@ print(reward_season)
 # Correlation analysis
 correlation = dataset2[['bat_landing_number', 'rat_minutes', 'rat_arrival_number']].corr()
 
-
 # Plotting the correlation matrix
 plt.figure(figsize=(6, 4))
 sns.heatmap(correlation, cmap='coolwarm')
 plt.title('Correlation Matrix')
 plt.tight_layout()
+
+#@aashish this one for image for
 plt.savefig("correlation_matrix.png")
 plt.close()
 
@@ -130,30 +114,26 @@ plt.title('Average Risk-Taking Behaviour by Season')
 plt.xlabel('Season')
 plt.ylabel('Average Risk')
 plt.tight_layout()
+
+#for png of screen shot 
 plt.savefig("risk_by_season.png")
 plt.close()
-
 
 """Formulating and testing the hypothesis 
 Null hypothesis :behaviour does not change
 alternate hypothesis behviour change when rat are present"""
 
-
 #creating two groups
 #taking the data from dataset1,after any rats arrived
 bats_with_rats=dataset1[dataset1['seconds_after_rat_arrival']>0]['bat_landing_to_food']
 
-
 #taking the data from dataset1 ,before any rats arrived
 bats_without_rats=dataset1[dataset1['seconds_after_rat_arrival']==0]['bat_landing_to_food']
-
 
 #applying t test for significace analysis 
 #more clarilty is required in thisgit 
 t_stat, p_val = stats.ttest_ind(bats_with_rats.dropna(), bats_without_rats.dropna())
 print("t-statistic:", t_stat, "p-value:", p_val)
-
-
 
 #comparing p-value test difference in bat behaviour
 if p_val < 0.05:
@@ -161,14 +141,9 @@ if p_val < 0.05:
 else:
     print("No significant difference")
 
-
-
-
-
+#performing the z score for 
 dataset1['bat_landing_z'] = zscore(dataset1['bat_landing_to_food'])
 dataset1['seconds_after_rat_arrival_z'] = zscore(dataset1['seconds_after_rat_arrival'])
-
-
 
 # Visualize Z-scores for bat_landing_to_food
 plt.figure(figsize=(8,5))
@@ -179,6 +154,7 @@ plt.ylabel("Frequency")
 plt.axvline(0, color='red', linestyle='--', label='Mean = 0')
 plt.legend()
 plt.tight_layout()
+#for window
 plt.show()
 
 # Visualize Z-scores for seconds_after_rat_arrival
@@ -191,3 +167,27 @@ plt.axvline(0, color='red', linestyle='--', label='Mean = 0')
 plt.legend()
 plt.tight_layout()
 plt.show()
+
+# Additional T-test for vigilance by risk behavior
+risk_avoidance_delays = dataset1[dataset1['risk']==0]['bat_landing_to_food'].dropna()
+risk_taking_delays = dataset1[dataset1['risk']==1]['bat_landing_to_food'].dropna()
+
+t_stat_risk, p_val_risk = stats.ttest_ind(risk_avoidance_delays, risk_taking_delays)
+print("T-test: Vigilance Delay by Risk Behavior")
+print("t-statistic:", t_stat_risk, "p-value:", p_val_risk)
+if p_val_risk < 0.05:
+    print("Significant difference in vigilance between risk behaviors")
+else:
+    print("No significant difference in vigilance between risk behaviors")
+
+# Additional T-test for bat activity (Dataset2)
+bat_landings_with_rats = dataset2[dataset2['rat_arrival_number']>0]['bat_landing_number'].dropna()
+bat_landings_without_rats = dataset2[dataset2['rat_arrival_number']==0]['bat_landing_number'].dropna()
+
+t_stat_activity, p_val_activity = stats.ttest_ind(bat_landings_with_rats, bat_landings_without_rats)
+print("T-test: Bat Activity vs Rat Presence (Dataset2)")
+print("t-statistic:", t_stat_activity, "p-value:", p_val_activity)
+if p_val_activity < 0.05:
+    print("Rat presence significantly affects bat activity")
+else:
+    print("No significant difference in bat activity due to rats")

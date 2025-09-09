@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
+#for z score analysis
+from scipy.stats import zscore
+
+
+
 #importing for t test
 from scipy import stats
 
@@ -155,3 +160,34 @@ if p_val < 0.05:
     print("Rat presence significantly affects bat behaviour")
 else:
     print("No significant difference")
+
+
+
+
+
+dataset1['bat_landing_z'] = zscore(dataset1['bat_landing_to_food'])
+dataset1['seconds_after_rat_arrival_z'] = zscore(dataset1['seconds_after_rat_arrival'])
+
+
+
+# Visualize Z-scores for bat_landing_to_food
+plt.figure(figsize=(8,5))
+sns.histplot(dataset1['bat_landing_z'], bins=30, kde=True, color='skyblue')
+plt.title("Z-score Distribution of Bat Landing to Food")
+plt.xlabel("Z-score")
+plt.ylabel("Frequency")
+plt.axvline(0, color='red', linestyle='--', label='Mean = 0')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# Visualize Z-scores for seconds_after_rat_arrival
+plt.figure(figsize=(8,5))
+sns.histplot(dataset1['seconds_after_rat_arrival_z'], bins=30, kde=True, color='lightgreen')
+plt.title("Z-score Distribution of Seconds After Rat Arrival")
+plt.xlabel("Z-score")
+plt.ylabel("Frequency")
+plt.axvline(0, color='red', linestyle='--', label='Mean = 0')
+plt.legend()
+plt.tight_layout()
+plt.show()

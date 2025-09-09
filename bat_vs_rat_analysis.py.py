@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -12,9 +13,6 @@ from scipy import stats
 dataset1 = pd.read_csv("dataset1.csv")
 dataset2 = pd.read_csv("dataset2.csv")
 
-#testing the import of data need to clean this after
-print(dataset1.columns)
-print(dataset2)
 
 # Data Cleaning and transformation
 #selects column ris from the data frame as int converts all the values to integer
@@ -102,8 +100,6 @@ plt.figure(figsize=(6, 4))
 sns.heatmap(correlation, cmap='coolwarm')
 plt.title('Correlation Matrix')
 plt.tight_layout()
-
-#@aashish this one for image for
 plt.savefig("correlation_matrix.png")
 plt.close()
 
@@ -114,8 +110,6 @@ plt.title('Average Risk-Taking Behaviour by Season')
 plt.xlabel('Season')
 plt.ylabel('Average Risk')
 plt.tight_layout()
-
-#for png of screen shot 
 plt.savefig("risk_by_season.png")
 plt.close()
 
@@ -154,8 +148,8 @@ plt.ylabel("Frequency")
 plt.axvline(0, color='red', linestyle='--', label='Mean = 0')
 plt.legend()
 plt.tight_layout()
-#for window
-plt.show()
+plt.savefig("Z-score Distribution of Bat Landing to Food.png")
+plt.close()
 
 # Visualize Z-scores for seconds_after_rat_arrival
 plt.figure(figsize=(8,5))
@@ -166,7 +160,9 @@ plt.ylabel("Frequency")
 plt.axvline(0, color='red', linestyle='--', label='Mean = 0')
 plt.legend()
 plt.tight_layout()
-plt.show()
+plt.savefig("Z-score Distribution of Seconds After Rat Arrival.png")
+plt.close()
+
 
 # Additional T-test for vigilance by risk behavior
 risk_avoidance_delays = dataset1[dataset1['risk']==0]['bat_landing_to_food'].dropna()
@@ -180,6 +176,17 @@ if p_val_risk < 0.05:
 else:
     print("No significant difference in vigilance between risk behaviors")
 
+# Plot vigilance delays by risk behavior
+plt.figure(figsize=(8, 6))
+plt.boxplot([risk_avoidance_delays, risk_taking_delays], labels=['Risk-Avoidance', 'Risk-Taking'])
+plt.title('Vigilance Delays by Risk Behavior')
+plt.ylabel('Delay before approaching food (seconds)')
+plt.yscale('log')  # Log scale for wide range
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('vigilance_delays_by_risk_behavior.png', dpi=300, bbox_inches='tight')
+plt.close()
+
 # Additional T-test for bat activity (Dataset2)
 bat_landings_with_rats = dataset2[dataset2['rat_arrival_number']>0]['bat_landing_number'].dropna()
 bat_landings_without_rats = dataset2[dataset2['rat_arrival_number']==0]['bat_landing_number'].dropna()
@@ -191,3 +198,16 @@ if p_val_activity < 0.05:
     print("Rat presence significantly affects bat activity")
 else:
     print("No significant difference in bat activity due to rats")
+
+# Plot bat activity vs rat presence 
+plt.figure(figsize=(8, 6))
+conditions = ['With Rats', 'Without Rats']
+means = [bat_landings_with_rats.mean(), bat_landings_without_rats.mean()]
+bars = plt.bar(conditions, means, color=['orange', 'green'], alpha=0.8)
+plt.title('Bat Activity vs Rat Presence')
+plt.ylabel('Average Bat Landings')
+for bar, mean_val in zip(bars, means):
+    plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5, f'{mean_val:.1f}', ha='center', fontweight='bold', fontsize=12)
+plt.tight_layout()
+plt.savefig('bat_activity_vs_rat_presence.png', dpi=300, bbox_inches='tight')
+plt.close()

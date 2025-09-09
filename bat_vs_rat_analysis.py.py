@@ -42,7 +42,7 @@ plt.tight_layout()
 plt.savefig("correlation_matrix.png")
 plt.close()
 
-# # Plotting average risk by seasonc
+# # Plotting average risk by season
 plt.figure(figsize=(6, 4))
 sns.barplot(x='season', y='reward', data=reward_season)
 plt.title('Average Risk-Taking Behaviour by Season')
@@ -68,13 +68,15 @@ bats_with_rats=dataset1[dataset1['seconds_after_rat_arrival']>0]['bat_landing_to
 bats_without_rats=dataset1[dataset1['seconds_after_rat_arrival']==0]['bat_landing_to_food']
 
 
-#applying t test
-
+#applying t test for significace analysis 
 #more clarilty is required in thisgit 
 t_stat, p_val = stats.ttest_ind(bats_with_rats.dropna(), bats_without_rats.dropna())
 print("t-statistic:", t_stat, "p-value:", p_val)
 
+
+
+#comparing p-value test difference in bat behaviour
 if p_val < 0.05:
-    print("Reject H0 → Rat presence significantly affects bat behaviour")
+    print("Rat presence significantly affects bat behaviour")
 else:
-    print("Fail to reject H0 → No significant difference")
+    print("No significant difference")
